@@ -2,9 +2,10 @@ package client
 
 import (
 	"fmt"
+	"time"
+
 	proto "github.com/bjeanes/go-lifx/protocol"
 	payloads "github.com/bjeanes/go-lifx/protocol/payloads"
-	"time"
 )
 
 type client struct {
@@ -12,7 +13,7 @@ type client struct {
 	connection *proto.Connection
 	Messages   <-chan proto.Message
 	Errors     <-chan error
-	Lights     []light
+	Lights     []Light
 }
 
 func New() *client {
@@ -49,7 +50,7 @@ func (c *client) Discover() {
 			case msg := <-c.Messages:
 				switch msg.Payload.(type) {
 				case *payloads.DeviceStatePanGateway:
-					c.Lights = append(c.Lights, light{client: *c})
+					c.Lights = append(c.Lights, Light{client: *c})
 				default:
 					fmt.Println(fmt.Sprintf("I heard something, and it was a %T", msg.Payload))
 				}
